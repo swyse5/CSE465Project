@@ -42,6 +42,138 @@ void zpm::parseFile(char* file) {
   }
 }
 
+void zpm::analyzeAssignment(std::string line) {
+  // name of variable
+  std::string variable = nextToken(&line);
+  // assignment operator
+  std::string operator1 = nextToken(&line);
+  // value on right side of statement
+  std::string val = nextToken(&line);
+  Data value;
+
+  Type variableType = findType(val);
+
+  switch(variableType) {
+    // Type variable
+    case typeVar: {
+      // if it doesn't have value, throw error
+      if(varTable.find(stringVal) == varTable.end()) {
+        runtimeError();
+      } else {
+        value = varTable[stringVal];
+      }
+      break;
+    }
+
+    // Type string
+    case typeString: {
+      value.typeFlag = typeString;
+      stringVal = trimQuotes(stringVal);
+      value.s = new char[stringVal.length() + 1];
+      std::strcpy(value.s, stringVal.c_str());
+      break;
+    }
+
+    // Type int
+    case typeInt: {
+      value.typeFlag = typeInt;
+      value.i = std::stoi(stringVal);
+      break;
+    }
+    // If not one of those types, throw error
+    default:
+    runtimeError();
+  }
+
+  // Make sure the operator is valid, depending on the variableType
+  if(operator1 != "=") {
+    if(varTable[variable].typeFlag != value.typeFlag) {
+      runtimeError();
+    }
+    if((operator1 == "*=" || operator1 == "-=") && value.typeFlag != typeInt) {
+      runtimeError();
+    }
+  }
+
+  // Assign based on the type of assignment
+  if(operator1 == "=") {
+    varTable[variable] = value;
+  } else if(operator1 == "+=") {
+    if(value.typeFlag == typeInt) {
+      varTable[variable].typeFlag = typeInt;
+      varTable[variable].i = varTable[variable].i + value.i;
+    } else {
+      varTable[variable].typeFlag = typeString;
+      int newLength = strlen(varTable[variable].s) + strlen(value.s) + 1;
+      char* temp = new char[newLength];
+
+      strcpy(temp, varTable[variable].s);
+      strcat(temp, value.s);
+      strcpy(varTable[variable].s, temp);
+      delete temp;
+      temp = NULL;
+    }
+  } else if(operator1 == "*=") {
+    varTable[variable].typeFlag = typeInt;
+    varTable[variable].i = varTable[variable].i * value.i;
+  } else {
+    varTable[variable].typeFlag = typeInt;
+    varTable[variable].i = varTable[variable].i - value.i;
+  }
+}
+
+// Print variable name and value of variable
+void zpm::analyzePrint(std::string line) {
+  nextToken(&line);
+  std::string varName = nextToken(&line);
+
+  if(varTable.find(varName) == varTable.end()) {
+    runtimeError();
+  } else {
+    // Print out variable name and value
+    Data value = varTable[varName];
+    switch(value.typeFlag) {
+      case typeString:
+        std::cout << varName << "=" << value.s << std::endl;
+        break;
+
+      case typeInt:
+        std::cout << varName << "=" << value.i << std::endl;
+        break;
+
+      default:
+      // Should never get here
+      runtimeError();
+    }
+  }
+}
+
+// Determines type of string
+// Options are: string, int, or variable
+Type zpm::findType(std::string token) {
+  if(token[0] == '\"') {
+    return typeString;
+  } else if(isdigit(token[0])) {
+    return typeInt;
+  } else {
+    return typeVar;
+  }
+}
+
+// Gets first token in the string and removes it from the line
+std::string zpm::nextToken(std::string* line) {
+  // find the first space
+  int delimiterIndex = line->find_first_of(" ");
+  std::string token = line->substr(0, delimiterIndex);
+  token = trim(&token);
+
+  *line = line->substr(delimiterIndex, (line->length() - delimiterIndex));
+  *line = trim(line);
+
+  return token;
+}
+
+
 // Deletes the varTable pointers
 // This is used in the destructor and runtimeError function
 void zpm::deletePointers() {
