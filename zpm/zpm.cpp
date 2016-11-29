@@ -6,7 +6,9 @@
 #include <fstream>
 #include <iostream>
 #include <cstring>
-#inlcude "zpm.h"
+#include "zpm.h"
+
+using namespace std;
 
 int count = 0;
 
@@ -24,7 +26,11 @@ zpm::~zpm() {
 void zpm::parseStatement(std::string line) {
   // if PRINT is not on a line, we know it's an assignment statement
   if(line.find("PRINT") == -1) {
+    if(line.find("FOR") != -1) {
+      std::cout << "Does not handle FOR loops." << std::endl;
+    } else {
     analyzeAssignment(line);
+  }
   } else {
     analyzePrint(line);
   }
@@ -57,10 +63,10 @@ void zpm::analyzeAssignment(std::string line) {
     // Type variable
     case typeVar: {
       // if it doesn't have value, throw error
-      if(varTable.find(stringVal) == varTable.end()) {
+      if(varTable.find(val) == varTable.end()) {
         runtimeError();
       } else {
-        value = varTable[stringVal];
+        value = varTable[val];
       }
       break;
     }
@@ -68,21 +74,22 @@ void zpm::analyzeAssignment(std::string line) {
     // Type string
     case typeString: {
       value.typeFlag = typeString;
-      stringVal = trimQuotes(stringVal);
-      value.s = new char[stringVal.length() + 1];
-      std::strcpy(value.s, stringVal.c_str());
+      val = trimQuotes(val);
+      value.s = new char[val.length() + 1];
+      std::strcpy(value.s, val.c_str());
       break;
     }
 
     // Type int
     case typeInt: {
       value.typeFlag = typeInt;
-      value.i = std::stoi(stringVal);
+      value.i = std::stoi(val);
       break;
     }
     // If not one of those types, throw error
-    default:
-    runtimeError();
+    default: {
+      runtimeError();
+    }
   }
 
   // Make sure the operator is valid, depending on the variableType
@@ -134,11 +141,11 @@ void zpm::analyzePrint(std::string line) {
     Data value = varTable[varName];
     switch(value.typeFlag) {
       case typeString:
-        std::cout << varName << "=" << value.s << std::endl;
+        std::cout << varName << " = " << value.s << std::endl;
         break;
 
       case typeInt:
-        std::cout << varName << "=" << value.i << std::endl;
+        std::cout << varName << " = " << value.i << std::endl;
         break;
 
       default:
@@ -165,10 +172,10 @@ std::string zpm::nextToken(std::string* line) {
   // find the first space
   int delimiterIndex = line->find_first_of(" ");
   std::string token = line->substr(0, delimiterIndex);
-  token = trim(&token);
+  token = trimWhitespace(&token);
 
   *line = line->substr(delimiterIndex, (line->length() - delimiterIndex));
-  *line = trim(line);
+  *line = trimWhitespace(line);
 
   return token;
 }
@@ -189,7 +196,7 @@ void zpm::deletePointers() {
 std::string zpm::trimWhitespace(std::string* str) {
   int start = str->find_first_not_of(" ");
   int end = str->find_last_not_of(" ");
-  return str->substr(begin, (end-begin+1));
+  return str->substr(start, (end-start+1));
 }
 
 // Takes in a string and returns that string, but without the quotes ("") around it
@@ -199,7 +206,7 @@ std::string zpm::trimQuotes(std::string str) {
 
 // Throw runtime error with line number of error
 void zpm::runtimeError() {
-  std:cerr <<"Runtime error on line: " <<lineNumber <<std::endl;
+  std:cerr << "RUNTIME ERROR: line " <<lineNumber <<std::endl;
   deletePointers();
   exit(1);
 }
