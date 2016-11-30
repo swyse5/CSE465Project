@@ -17,5 +17,7 @@
 )
 
 (define (SumList L target)
-  (SumListH 0 L target)
+  (if (memq target L) #t
+      (SumListH 0 L target)
+  )
 )
