@@ -17,7 +17,29 @@
 )
 
 (define (SumList L target)
+  (if (memq target L) #t ; if target is in list, return #t
+      (SumListH 0 L target)
+  )
+)
+
+
+#|
+(define (SumListH sum L target)
+  (cond 
+        ((null? L)
+                ((not (= target 0)) ; if list is null
+                     ((= target sum)
+                         #t #f))
+                ((= target sum) ; if list is not null
+                     ((not (= target 0)) #t) ; if sum equals target return #t
+                     (SumListH (+ sum (car L)) (cdr L) target)) ; if sum does not equal target call function
+        )
+   (else #f))
+)
+
+(define (SumList L target)
   (if (memq target L) #t
       (SumListH 0 L target)
   )
 )
+|#
