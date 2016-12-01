@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ZPM {
+public class zpm {
 	public static HashMap<String, String> variables = new HashMap<String, String>();
 	public static int count = 0;
 
