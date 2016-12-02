@@ -1,8 +1,14 @@
 /**
-* So far, this only returns the total sum of the list
+* Stuart Wyse
+* CSE 465 - Term Project
+* Summation - Prolog
 */
 
-summation([H|_]) :- H = 0.
-summation([_|T]) :- summation(T).
-summation([], 0).
-summation([H|T], S) :- summation(T, S2), S is H + S2.
+summation(List, Target) :-  sublst(List, X), sum(X, Target), !.
+
+sublst([], []).
+sublst([E|Tail], [E|NTail]) :- sublst(Tail, NTail).
+sublst([_|Tail], NTail) :- sublst(Tail, NTail).
+
+sum([N], N) :- number(N).
+sum([H|T], N) :- number(H), sum(T, Y), N is H + Y.
