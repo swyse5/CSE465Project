@@ -22,6 +22,15 @@
   )
 )
 
+(SumList '(1 2 3 4) 10)
+(SumList '(1 2 3 4) 14)
+(SumList '(1 2 3 4) 0)
+(SumList '(0 1 2 3 4) 0)
+(SumList '(1 2 3 -4) -3)
+(SumList '(1 2 8 2) 5)
+
+
+
 
 #|
 (define (SumListH sum L target)

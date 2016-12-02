@@ -1,5 +1,5 @@
 // Stuart Wyse
-// CSE 465 - HW5
+// CSE 465 - Term Project
 
 #include "bandMatrix.h"
 
