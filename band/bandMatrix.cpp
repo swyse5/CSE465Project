@@ -1,5 +1,6 @@
 // Stuart Wyse
 // CSE 465 - Term Project
+// bandMatrix.cpp
 
 #include "bandMatrix.h"
 

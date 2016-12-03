@@ -1,8 +1,7 @@
 /*
  * Stuart Wyse
- * CSE 465 - HW 1 & Term Project
- * 
- * This program is meant to read in a z+- file and interpret it.
+ * CSE 465 - Term Project
+ * zpm.java
  */
 
 import java.util.HashMap;

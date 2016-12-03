@@ -1,3 +1,7 @@
+; Stuart Wyse
+; CSE 465 - Term Project
+; sum.scm
+
 (define count 0)
 
 (define (SumListH sum L target count)
@@ -28,27 +32,3 @@
 (SumList '(0 1 2 3 4) 0)
 (SumList '(1 2 3 -4) -3)
 (SumList '(1 2 8 2) 5)
-
-
-
-
-#|
-(define (SumListH sum L target)
-  (cond 
-        ((null? L)
-                ((not (= target 0)) ; if list is null
-                     ((= target sum)
-                         #t #f))
-                ((= target sum) ; if list is not null
-                     ((not (= target 0)) #t) ; if sum equals target return #t
-                     (SumListH (+ sum (car L)) (cdr L) target)) ; if sum does not equal target call function
-        )
-   (else #f))
-)
-
-(define (SumList L target)
-  (if (memq target L) #t
-      (SumListH 0 L target)
-  )
-)
-|#

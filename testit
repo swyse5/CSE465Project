@@ -38,7 +38,7 @@ for ITEM in A B
 do
         cp $TESTDATA/zipcodes/cities$ITEM.txt cities.txt
         cp $TESTDATA/zipcodes/zips$ITEM.txt zips.txt
-        cp $TESTDATA/zipcodes/states$ITEM.txt stats.txt
+        cp $TESTDATA/zipcodes/states$ITEM.txt states.txt
 
         echo "C#"
         mono zipcodes.exe
@@ -79,6 +79,3 @@ echo "Python"
 python3 main.py > bandpy.out
 
 cd ..
-
-
-fi

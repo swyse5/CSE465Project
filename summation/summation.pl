@@ -1,7 +1,7 @@
 /**
 * Stuart Wyse
 * CSE 465 - Term Project
-* Summation - Prolog
+* summation.pl
 */
 
 summation(List, Target) :-  sublst(List, X), sum(X, Target), !.

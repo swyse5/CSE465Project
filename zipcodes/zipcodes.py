@@ -1,5 +1,6 @@
 # Stuart Wyse
 # CSE 465 - Term Project
+# zipcodes.py
 
 def main():
     commonCityNames()
